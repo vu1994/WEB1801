@@ -1,0 +1,81 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jan 26, 2018, 2:20:05 PM
+    Author     : npvu
+*/
+
+.table-bordered>thead>tr>th,
+.table-bordered>tbody>tr>th,
+.table-bordered>tfoot>tr>th,
+.table-bordered>thead>tr>td,
+.table-bordered>tbody>tr>td,
+.table-bordered>tfoot>tr>td {
+    border:1px solid #ddd !important
+}
+.form-inline label, input {
+    margin-right: 0px !important;
+}
+.margin-r-5 {
+    margin-right: 5px !important;
+}
+.margin-t-5 {
+    margin-top: 5px !important;
+}
+.margin-t-10 {
+    margin-top: 10px !important;
+}
+.margin-t-15 {
+    margin-top: 15px !important;
+}
+.bficon-error-circle-o:before {
+    color: #ffffff !important;
+    content: "\e088";
+}
+.required {
+    border-left: 3px solid red;
+}
+.dataTables_filter {
+        text-align: left !important;
+}
+a:hover {
+    text-decoration: none !important;
+}
+.btn-add-position {
+    position: absolute !important;
+}
+@media screen and (max-width: 767px){
+    .dataTables_filter {
+        text-align: left !important;
+    }
+}
+@media screen and (max-width: 400px){
+    .btn-add-position {
+        position: static !important;
+    }
+    .dataTables_filter {
+        text-align: right !important;
+    }
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-family: Times New Roman Georgia !important;
+}
+
+/*
+    Customize Bootfaces Css
+*/
+.input-group .input-group-addon {
+    border-left: 3px solid red;
+}
+.input-group .removeRequiredCSS {
+    border-left: 1px solid #ccc !important;
+}
+.content-header > h1{
+    color: #565656 !important;
+}
+.btn-danger {
+    color: #ffffff !important;
+}
