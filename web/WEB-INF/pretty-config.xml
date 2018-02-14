@@ -11,8 +11,12 @@ and open the template in the editor.
   xsi:schemaLocation="http://ocpsoft.org/schema/rewrite-config-prettyfaces
                       http://ocpsoft.org/xml/ns/prettyfaces/rewrite-config-prettyfaces.xsd">
  
-    <url-mapping id="login">
-        <pattern value="/login/" /> <!--url pattern-->
-        <view-id value="/faces/index.xhtml" /> <!--name of the page you want to change the url-->
+    <url-mapping id="login_1">
+        <pattern value="/dang-nhap/" />
+        <view-id value="/faces/page/login.xhtml" /> <!--name of the page you want to change the url-->
+    </url-mapping>
+    <url-mapping id="login_2">
+        <pattern value="/login/" />
+        <view-id value="/faces/page/login.xhtml" /> <!--name of the page you want to change the url-->
     </url-mapping>
 </pretty-config>
