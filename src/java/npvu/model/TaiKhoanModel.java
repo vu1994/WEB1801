@@ -14,6 +14,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  *
@@ -38,6 +40,7 @@ public class TaiKhoanModel implements Serializable {
     private String matKhau;
     
     @Column(name = "tk_ngaytao")
+    @Temporal(javax.persistence.TemporalType.DATE)
     private Date ngayTao;
     
     @Column(name = "tk_nguoitao")
@@ -45,7 +48,7 @@ public class TaiKhoanModel implements Serializable {
     
     
     // Khóa ngoại - các bảng liên quan
-    @Column(name = "quyen_id")
+    @Transient
     private List<Integer> quyenID;
 
     public int getId() {

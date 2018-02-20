@@ -25,13 +25,12 @@ public class TaiKhoanDataProvider implements Serializable {
     
     public TaiKhoanModel getTaiKhoanByTenTaiKhoan(String tenTaiKhoan){
         Session session = HibernateUtil.currentSession();
-        TaiKhoanModel objTaiKhoanModel = new TaiKhoanModel();
+        TaiKhoanModel objTaiKhoanModel = null;
         try {
             session.beginTransaction();
             objTaiKhoanModel = (TaiKhoanModel) session.createSQLQuery("SELECT *"
                     + " FROM taikhoan tk"
-                    + " LEFT JOIN quyen_taikhoan qtk"
-                    + " ON qtk.tk_id = tk.tk_id  WHERE tk.tk_tentaikhoan = '"+tenTaiKhoan+"'")
+                    + " WHERE tk.tk_tentaikhoan = '"+tenTaiKhoan+"'")
                     .addEntity(TaiKhoanModel.class).uniqueResult();
             session.getTransaction().commit();
 	} catch (Exception e) {

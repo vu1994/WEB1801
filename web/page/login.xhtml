@@ -32,7 +32,7 @@ and open the template in the editor.
                 margin-top: 50px;
             }
             .card-container.card {
-                max-width: 30%;
+                max-width: 35%;
                 padding: 40px 40px;
             }
             .card {
@@ -84,13 +84,26 @@ and open the template in the editor.
                             <p id="profile-name" class="profile-name-card"></p>
                             <div class="form-login">
                                 <div class="row">
+                                    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 text-left">
+                                        <b:messages severity="error" />
+                                        <b:messages severity="info" />
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                                        <b:inputText a:placeholder="Tên đăng nhập ..." class="txtUserName">
+                                        <b:inputText a:placeholder="Tên đăng nhập ..."
+                                                     required="true"
+                                                     requiredMessage="Vui lòng nhập tên đăng nhập !."
+                                                     class="txtUserName"
+                                                     value="#{Login.tempTaiKhoan}">
                                             <f:facet name="prepend">
                                                 <b:iconAwesome name="fa-user" />
                                             </f:facet>
                                         </b:inputText>
-                                        <b:inputSecret a:placeholder="Mật khẩu ...">
+                                        <b:inputSecret a:placeholder="Mật khẩu ..."
+                                                       required="true"
+                                                       requiredMessage="Vui lòng nhập mật khẩu !."
+                                                       value="#{Login.tempMatKhau}">
                                             <f:facet name="prepend">
                                                 <b:iconAwesome name="fa-lock" />
                                             </f:facet>
@@ -101,7 +114,8 @@ and open the template in the editor.
                                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                                         <b:commandButton value="Đăng nhập" iconAwesome="fa-sign-in"
                                                          update="@form" process="@form"
-                                                         class="btn-primary width-100"/>
+                                                         class="btn-primary width-100"
+                                                         action="${Login.login()}"/>
                                     </div>
                                 </div>
                                 <div class="row" style="margin-top:5px;">

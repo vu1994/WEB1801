@@ -257,7 +257,10 @@ and open the template in the editor.
                             <!-- /.box-body -->
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-default">Cancel</button>
-                                <button type="submit" class="btn btn-info pull-right">Sign in</button>
+                                <h:form>
+                                <h:commandButton value="Sign in" styleClass="btn btn-primary"
+                                                 action="#{Login.preLogin()}"/>
+                                </h:form>
                             </div>
                             <!-- /.box-footer -->
                         </form>
