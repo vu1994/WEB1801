@@ -5,6 +5,7 @@
  */
 package npvu.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -24,22 +25,28 @@ public class TaiKhoanController {
     
     private final TaiKhoanDataProvider tkProvider = new TaiKhoanDataProvider();
     
-    private List<TaiKhoanModel> dsTaiKhoan;
+    private List<TaiKhoanModel> dsTaiKhoan = new ArrayList<>();
     
     private int selectedQuyen;
+    
+    private int viewMode;
 
     /**
      * Creates a new instance of TaiKhoanController
      */
     public TaiKhoanController() {
+        actionGetDanhSachTaiKhoan();
+        viewMode = 0;
     }
     
-    public void actionGetDanhSachTaiKhoan(){
+    private void actionGetDanhSachTaiKhoan(){
+        log.info("***** Lấy danh sách tài khoản <actionGetDanhSachTaiKhoan> *****");
         dsTaiKhoan.clear();
         dsTaiKhoan = tkProvider.getDanhSachTaiKhoan();
     }
     
     public void actionGetDanhSachTaiKhoanByQuyen(){
+        log.info("***** Lấy danh sách tài khoản <actionGetDanhSachTaiKhoanByQuyen> *****");
         dsTaiKhoan.clear();
         dsTaiKhoan = tkProvider.getDanhSachTaiKhoanByQuyen(selectedQuyen);
     }
@@ -58,6 +65,14 @@ public class TaiKhoanController {
 
     public void setSelectedQuyen(int selectedQuyen) {
         this.selectedQuyen = selectedQuyen;
+    }
+
+    public int getViewMode() {
+        return viewMode;
+    }
+
+    public void setViewMode(int viewMode) {
+        this.viewMode = viewMode;
     }
     
     
