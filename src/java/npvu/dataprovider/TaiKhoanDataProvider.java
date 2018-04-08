@@ -18,7 +18,7 @@ import org.slf4j.LoggerFactory;
  * Hibernate Utility class with a convenient method to get Session Factory
  * object.
  *
- * @author thyen
+ * @author npvu
  */
 public class TaiKhoanDataProvider implements Serializable {  
     private static final Logger log = LoggerFactory.getLogger(TaiKhoanDataProvider.class);
@@ -30,7 +30,7 @@ public class TaiKhoanDataProvider implements Serializable {
             session.beginTransaction();
             objTaiKhoanModel = (TaiKhoanModel) session.createSQLQuery("SELECT *"
                     + " FROM taikhoan tk"
-                    + " WHERE tk.tk_tentaikhoan = '"+tenTaiKhoan+"'")
+                    + " WHERE tk.taikhoan_tentaikhoan = '"+tenTaiKhoan+"'")
                     .addEntity(TaiKhoanModel.class).uniqueResult();
             session.getTransaction().commit();
 	} catch (Exception e) {
@@ -46,10 +46,10 @@ public class TaiKhoanDataProvider implements Serializable {
         List<TaiKhoanModel> dsTaiKhoan = new ArrayList();
         try {
             session.beginTransaction();
-            dsTaiKhoan = session.createSQLQuery("SELECT *"
+            dsTaiKhoan = session.createSQLQuery("SELECT * "
                     + " FROM taikhoan tk"
                     + " LEFT JOIN quyen_taikhoan qtk"
-                    + " ON qtk.tk_id = tk.tk_id").addEntity(TaiKhoanModel.class).list();
+                    + " ON qtk.taikhoan_id = tk.taikhoan_id ").addEntity(TaiKhoanModel.class).list();
             session.getTransaction().commit();
 	} catch (Exception e) {
             log.error("Lỗi get danh sách tài khoản {}", e);
@@ -67,7 +67,7 @@ public class TaiKhoanDataProvider implements Serializable {
             dsTaiKhoan = session.createSQLQuery("SELECT *"
                     + " FROM taikhoan tk"
                     + " LEFT JOIN quyen_taikhoan qtk"
-                    + " ON qtk.tk_id = tk.tk_id "
+                    + " ON qtk.taikhoan_id = tk.taikhoan_id "
                     + " WHERE qtk.quyen_id = "+quyenID).addEntity(TaiKhoanModel.class).list();
             session.getTransaction().commit();
 	} catch (Exception e) {
@@ -100,7 +100,7 @@ public class TaiKhoanDataProvider implements Serializable {
         try {
             session.beginTransaction();
             session.delete(objTaiKhoan);
-            session.createSQLQuery("DELETE FROM quyen_taikhoan WHERE tk_id = "+objTaiKhoan.getId()).executeUpdate();
+            session.createSQLQuery("DELETE FROM quyen_taikhoan WHERE taikhoan_id = "+objTaiKhoan.getId()).executeUpdate();
             session.getTransaction().commit();
 	} catch (Exception e) {
             session.getTransaction().rollback();

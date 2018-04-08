@@ -22,19 +22,19 @@ and open the template in the editor.
     
     <url-mapping id="QuanLyTaiKhoan_1">
         <pattern value="/quan-ly/tai-khoan/" />
-        <view-id value="/faces/page/admin/account/account.xhtml" />
+        <view-id value="/faces/page/quanly/taikhoan/taikhoan.xhtml" />
     </url-mapping>
     <url-mapping id="QuanLyTaiKhoan_2">
         <pattern value="/manager/account/" />
-        <view-id value="/faces/page/admin/account/account.xhtml" />
+        <view-id value="/faces/page/quanly/taikhoan/taikhoan.xhtml" />
     </url-mapping>
     
     <url-mapping id="LichSuDangNhap_1">
         <pattern value="/quan-ly/lich-su-dang-nhap/" />
-        <view-id value="/faces/page/admin/account/history.xhtml" />
+        <view-id value="/faces/page/quanly/taikhoan/lichsudangnhap.xhtml" />
     </url-mapping>
     <url-mapping id="LichSuDangNhap_2">
         <pattern value="/manager/history/" />
-        <view-id value="/faces/page/admin/account/history.xhtml" />
+        <view-id value="/faces/page/quanly/taikhoan/lichsudangnhap.xhtml" />
     </url-mapping>
 </pretty-config>

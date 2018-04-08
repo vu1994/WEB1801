@@ -19,6 +19,9 @@ and open the template in the editor.
 .form-inline label, input {
     margin-right: 0px !important;
 }
+.margin-2 {
+    margin: 2px;
+}
 .margin-r-5 {
     margin-right: 5px !important;
 }
@@ -30,6 +33,10 @@ and open the template in the editor.
 }
 .margin-t-15 {
     margin-top: 15px !important;
+}
+.margin-l-r-2 {
+    margin-left: 2px;
+    margin-right: 2px;
 }
 .bficon-error-circle-o:before {
     color: #ffffff !important;
@@ -78,4 +85,12 @@ a:hover {
 }
 .btn-danger {
     color: #ffffff !important;
+}
+
+.verify-lock .modal-body {
+    height: 120px;
+}
+
+.box-body .tableDanhSachTaiKhoan{
+    width: 100% !important;
 }

@@ -80,11 +80,11 @@ public class Login implements Serializable{
                 
             } else {
                 // Sai mật khẩu
-                showGrow.showMessageValidate("Mật khẩu không đúng, vui lòng kiểm tra lại thông tin !.");
+                showGrow.showMessageError("Mật khẩu không đúng, vui lòng kiểm tra lại thông tin !.");
             }
         } else {
             // Tài khoản không tồn tại
-            showGrow.showMessageValidate("Tên đăng nhập không tồn tại, vui lòng kiểm tra lại thông tin !.");
+            showGrow.showMessageError("Tên đăng nhập không tồn tại, vui lòng kiểm tra lại thông tin !.");
         }
         tempMatKhau = null;
     }
