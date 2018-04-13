@@ -7,9 +7,12 @@ package npvu.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import npvu.dataprovider.RoleDataProvider;
 import npvu.dataprovider.TaiKhoanDataProvider;
 import npvu.model.TaiKhoanModel;
 import npvu.util.DateUtils;
@@ -28,17 +31,25 @@ public class TaiKhoanController implements Serializable{
     
     private final TaiKhoanDataProvider tkProvider = new TaiKhoanDataProvider();
     
-    private ShowGrowlUtils showGrowl = new ShowGrowlUtils();
+    private final RoleDataProvider roleProvider = new RoleDataProvider();
+    
+    private final ShowGrowlUtils showGrowl = new ShowGrowlUtils();
     
     private List<TaiKhoanModel> dsTaiKhoan = new ArrayList<>();
 
+    private List<Map> dsRole               = new ArrayList<>();
+    
     private TaiKhoanModel objTaiKhoan;
     
-    private int selectedQuyen;
+    private int selectedRole;
     
     private int viewMode;
     
+    private int tabIndex = 0;
+    
     private String passTemp;
+    
+    private String[] selectRoles;                                     // Biến dùng để lưu role khi cấp quyền
     /**
      * Creates a new instance of TaiKhoanController
      */
@@ -49,8 +60,12 @@ public class TaiKhoanController implements Serializable{
     
     public void preActionTaoTaiKhoan(){
         log.info("***** Khởi tạo tham số cho tài khoản mới <preActionTaoTaiKhoan> *****");
-        objTaiKhoan = new TaiKhoanModel();
+        objTaiKhoan = new TaiKhoanModel();        
         viewMode = 1;
+    }
+    
+    public List<Map> actionGetDanhSachRole(){
+        return roleProvider.getDanhSachRole();
     }
     
     public void actionUpdateTaiKhoan(){
@@ -60,9 +75,12 @@ public class TaiKhoanController implements Serializable{
             if (tkProvider.updateTaiKhoan(objTaiKhoan)) {
                 showGrowl.showMessageSuccess("Cập nhật tài khoản thành công !");
             } else {
-                showGrowl.showMessageError("Cập nhật tài khoản thất bại, Vui lòng thử lại !");
+                showGrowl.showMessageFatal("Cập nhật tài khoản thất bại, Vui lòng thử lại !");
             }
-        }        
+        } else {
+            return;
+        }
+        passTemp = "";
         actionGetDanhSachTaiKhoan();
         viewMode = 0;
     }
@@ -70,7 +88,11 @@ public class TaiKhoanController implements Serializable{
     public boolean actionVaildFormTaoTaiKhoan(){
         boolean vaild = true;
         if(!objTaiKhoan.getMatKhau().equals(passTemp)){
-            
+            showGrowl.showMessageFatal("Mật khẩu không khớp !");
+            vaild = false;
+            objTaiKhoan.setMatKhau("");
+            passTemp = "";
+            tabIndex = 0;
         }
         return vaild;
     }
@@ -81,10 +103,10 @@ public class TaiKhoanController implements Serializable{
         dsTaiKhoan = tkProvider.getDanhSachTaiKhoan();
     }
     
-    public void actionGetDanhSachTaiKhoanByQuyen(){
-        log.info("***** Lấy danh sách tài khoản <actionGetDanhSachTaiKhoanByQuyen> *****");
+    public void actionGetDanhSachTaiKhoanByRole(){
+        log.info("***** Lấy danh sách tài khoản <actionGetDanhSachTaiKhoanByRole> *****");
         dsTaiKhoan.clear();
-        dsTaiKhoan = tkProvider.getDanhSachTaiKhoanByQuyen(selectedQuyen);
+        dsTaiKhoan = tkProvider.getDanhSachTaiKhoanByRole(selectedRole);
     }
     
     public void selectTaiKhoan(TaiKhoanModel objTaiKhoan){
@@ -119,12 +141,12 @@ public class TaiKhoanController implements Serializable{
         this.dsTaiKhoan = dsTaiKhoan;
     }
 
-    public int getSelectedQuyen() {
-        return selectedQuyen;
+    public int getSelectedRole() {
+        return selectedRole;
     }
 
-    public void setSelectedQuyen(int selectedQuyen) {
-        this.selectedQuyen = selectedQuyen;
+    public void setSelectedRole(int selectedRole) {
+        this.selectedRole = selectedRole;
     }
 
     public int getViewMode() {
@@ -149,6 +171,30 @@ public class TaiKhoanController implements Serializable{
 
     public void setPassTemp(String passTemp) {
         this.passTemp = passTemp;
+    }
+
+    public List<Map> getDsRole() {
+        return dsRole;
+    }
+
+    public void setDsRole(List<Map> dsRole) {
+        this.dsRole = dsRole;
+    }
+
+    public String[] getSelectRoles() {
+        return selectRoles;
+    }
+
+    public void setSelectRoles(String[] selectRoles) {
+        this.selectRoles = selectRoles;
+    }
+
+    public int getTabIndex() {
+        return tabIndex;
+    }
+
+    public void setTabIndex(int tabIndex) {
+        this.tabIndex = tabIndex;
     }
     
     

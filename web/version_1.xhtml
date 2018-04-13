@@ -10,7 +10,7 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
         <h:outputStylesheet name="css/bootstrap/bootstrap.min.css" library="resources"/>
         <h:outputStylesheet name="css/_all-skins.min.css" library="resources"/>
-        <h:outputStylesheet name="css/AdminLTE.min.css" library="resources"/>
+        <h:outputStylesheet name="css/AdminLTE.min.css" library="resources" />
         <h:outputStylesheet name="css/main.css" library="resources"/>
         <h:outputStylesheet name="css/style.css" library="resources"/>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic"/>
@@ -23,8 +23,8 @@
     </h:head>
 
     <h:body styleClass="hold-transition skin-blue sidebar-mini">
-        <b:growl  showDetail="true" severity="info"  showSummary="false" delay="3000"/>
-        <b:growl  showDetail="true" severity="error"  showSummary="false" delay="3000"/>
+        <b:growl showDetail="true" severity="info"  showSummary="false" delay="3000"/>
+        <b:growl showDetail="true" severity="fatal"  showSummary="false" delay="3000"/>
         <div class="wrapper" style="position: unset;">
             <ui:insert name="top">
                 <ui:include src="template/top.xhtml"/>

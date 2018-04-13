@@ -13,6 +13,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.Transient;
@@ -26,15 +27,16 @@ import javax.persistence.Transient;
 public class TaiKhoanModel implements Serializable {
     
     @Id
-    @GeneratedValue(strategy=GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "taikhoan_taikhoan_id_seq")
+    @SequenceGenerator(name = "taikhoan_taikhoan_id_seq", sequenceName = "taikhoan_taikhoan_id_seq", allocationSize = 1)
     @Column(name = "taikhoan_id", unique = true, nullable = false)
-    private int id;
+    private long id;
     
     @Column(name = "taikhoan_tenhienthi")
     private String tenHienThi;
     
-    @Column(name = "taikhoan_tentaikhoan")
-    private String tenTaiKhoan;
+    @Column(name = "taikhoan_tendangnhap")
+    private String tenDangNhap;
     
     @Column(name = "taikhoan_matkhau")
     private String matKhau;
@@ -44,7 +46,7 @@ public class TaiKhoanModel implements Serializable {
     private Date ngayTao;
     
     @Column(name = "taikhoan_nguoitao")
-    private String nguoiTao;
+    private long nguoiTao;
     
     @Column(name = "taikhoan_hoatdong")
     private boolean hoatdong;
@@ -77,13 +79,13 @@ public class TaiKhoanModel implements Serializable {
     private String email;
     
     @Transient
-    private List<Integer> quyenID;
+    private List<Integer> roleID;
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -95,12 +97,12 @@ public class TaiKhoanModel implements Serializable {
         this.tenHienThi = tenHienThi;
     }
 
-    public String getTenTaiKhoan() {
-        return tenTaiKhoan;
+    public String getTenDangNhap() {
+        return tenDangNhap;
     }
 
-    public void setTenTaiKhoan(String tenTaiKhoan) {
-        this.tenTaiKhoan = tenTaiKhoan;
+    public void setTenDangNhap(String tenDangNhap) {
+        this.tenDangNhap = tenDangNhap;
     }
 
     public String getMatKhau() {
@@ -119,20 +121,20 @@ public class TaiKhoanModel implements Serializable {
         this.ngayTao = ngayTao;
     }
 
-    public String getNguoiTao() {
+    public long getNguoiTao() {
         return nguoiTao;
     }
 
-    public void setNguoiTao(String nguoiTao) {
+    public void setNguoiTao(long nguoiTao) {
         this.nguoiTao = nguoiTao;
     }
 
-    public List<Integer> getQuyenID() {
-        return quyenID;
+    public List<Integer> getRoleID() {
+        return roleID;
     }
 
-    public void setQuyenID(List<Integer> quyenID) {
-        this.quyenID = quyenID;
+    public void setRoleID(List<Integer> roleID) {
+        this.roleID = roleID;
     }
 
     public boolean isHoatdong() {

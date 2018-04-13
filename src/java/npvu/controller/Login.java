@@ -30,7 +30,7 @@ public class Login implements Serializable{
     ShowGrowlUtils showGrow = new ShowGrowlUtils();
     
     private boolean logined;
-    private String tenTaiKhoan;
+    private String tenDangNhap;
     private String tenHienThi;
     private Date thoiGian;
     
@@ -61,12 +61,12 @@ public class Login implements Serializable{
         
         // Lấy tài khoản từ database
         TaiKhoanDataProvider tkProvider = new TaiKhoanDataProvider();
-        TaiKhoanModel objTaiKhoan = tkProvider.getTaiKhoanByTenTaiKhoan(tempTaiKhoan);
+        TaiKhoanModel objTaiKhoan = tkProvider.getTaiKhoanByTenDangNhap(tempTaiKhoan);
         
         if(objTaiKhoan != null){
             if(objTaiKhoan.getMatKhau().equals(tempMatKhau)){
                 logined = true;
-                tenTaiKhoan = objTaiKhoan.getTenTaiKhoan();
+                tenDangNhap = objTaiKhoan.getTenDangNhap();
                 tenHienThi = objTaiKhoan.getTenHienThi();
                 thoiGian = Calendar.getInstance().getTime();
                 tempTaiKhoan = null;
@@ -91,7 +91,7 @@ public class Login implements Serializable{
     
     public void logout(){
         logined = false;
-        tenTaiKhoan = null;
+        tenDangNhap = null;
         tenHienThi = null;
         thoiGian = null;
         tempMatKhau = null;
@@ -105,12 +105,12 @@ public class Login implements Serializable{
         this.logined = logined;
     }
 
-    public String getTenTaiKhoan() {
-        return tenTaiKhoan;
+    public String getTenDangNhap() {
+        return tenDangNhap;
     }
 
-    public void setTenTaiKhoan(String tenTaiKhoan) {
-        this.tenTaiKhoan = tenTaiKhoan;
+    public void setTenDangNhap(String tenDangNhap) {
+        this.tenDangNhap = tenDangNhap;
     }
 
     public String getTenHienThi() {

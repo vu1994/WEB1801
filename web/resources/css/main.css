@@ -94,3 +94,15 @@ a:hover {
 .box-body .tableDanhSachTaiKhoan{
     width: 100% !important;
 }
+.bf-message {
+    margin-bottom: 20px !important;
+}
+
+.unstyle-label {
+    font-weight: normal !important;
+}
+
+input + label {
+    margin-right: 10px !important;
+    font-weight: normal !important;
+}

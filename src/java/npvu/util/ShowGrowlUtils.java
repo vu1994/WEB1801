@@ -63,6 +63,15 @@ public class ShowGrowlUtils implements Serializable{
         context.addMessage(null, msg);
     }
     
+    public void showMessageFatal(String ms){
+        System.out.println(">> showMessageFatal");
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        FacesMessage msg = new FacesMessage(ms);
+        msg.setSeverity(FacesMessage.SEVERITY_FATAL);
+        context.addMessage(null, msg);
+    }
+    
     public boolean isShowGrowlSuccess() {
         return showGrowlSuccess;
     }

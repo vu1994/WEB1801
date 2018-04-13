@@ -22,19 +22,20 @@ import org.slf4j.LoggerFactory;
  */
 public class TaiKhoanDataProvider implements Serializable {  
     private static final Logger log = LoggerFactory.getLogger(TaiKhoanDataProvider.class);
+    private static final int ROLE_DEFAULT = 100;
     
-    public TaiKhoanModel getTaiKhoanByTenTaiKhoan(String tenTaiKhoan){
+    public TaiKhoanModel getTaiKhoanByTenDangNhap(String tenDangNhap){
         Session session = HibernateUtil.currentSession();
         TaiKhoanModel objTaiKhoanModel = null;
         try {
             session.beginTransaction();
             objTaiKhoanModel = (TaiKhoanModel) session.createSQLQuery("SELECT *"
                     + " FROM taikhoan tk"
-                    + " WHERE tk.taikhoan_tentaikhoan = '"+tenTaiKhoan+"'")
+                    + " WHERE tk.taikhoan_tendangnhap = '"+tenDangNhap+"'")
                     .addEntity(TaiKhoanModel.class).uniqueResult();
             session.getTransaction().commit();
 	} catch (Exception e) {
-            log.error("Lỗi get tài khoản <<" + tenTaiKhoan + ">> {}", e);
+            log.error("Lỗi get tài khoản <<" + tenDangNhap + ">> {}", e);
 	} finally {
             session.close();
 	}
@@ -48,8 +49,8 @@ public class TaiKhoanDataProvider implements Serializable {
             session.beginTransaction();
             dsTaiKhoan = session.createSQLQuery("SELECT * "
                     + " FROM taikhoan tk"
-                    + " LEFT JOIN quyen_taikhoan qtk"
-                    + " ON qtk.taikhoan_id = tk.taikhoan_id ").addEntity(TaiKhoanModel.class).list();
+                    + " LEFT JOIN roles_taikhoan role"
+                    + " ON role.taikhoan_id = tk.taikhoan_id ").addEntity(TaiKhoanModel.class).list();
             session.getTransaction().commit();
 	} catch (Exception e) {
             log.error("Lỗi get danh sách tài khoản {}", e);
@@ -59,19 +60,19 @@ public class TaiKhoanDataProvider implements Serializable {
         return dsTaiKhoan;
     }
     
-    public List<TaiKhoanModel> getDanhSachTaiKhoanByQuyen(int quyenID){
+    public List<TaiKhoanModel> getDanhSachTaiKhoanByRole(int roleID){
         Session session = HibernateUtil.currentSession();
         List<TaiKhoanModel> dsTaiKhoan = new ArrayList();
         try {
             session.beginTransaction();
             dsTaiKhoan = session.createSQLQuery("SELECT *"
                     + " FROM taikhoan tk"
-                    + " LEFT JOIN quyen_taikhoan qtk"
-                    + " ON qtk.taikhoan_id = tk.taikhoan_id "
-                    + " WHERE qtk.quyen_id = "+quyenID).addEntity(TaiKhoanModel.class).list();
+                    + " LEFT JOIN roles_taikhoan role"
+                    + " ON role.taikhoan_id = tk.taikhoan_id "
+                    + " WHERE qtk.role_id = "+roleID).addEntity(TaiKhoanModel.class).list();
             session.getTransaction().commit();
 	} catch (Exception e) {
-            log.error("Lỗi get danh sách tài khoản theo quyền <<" + quyenID + ">> {}", e);
+            log.error("Lỗi get danh sách tài khoản theo quyền <<" + roleID + ">> {}", e);
 	} finally {
             session.close();
 	}
@@ -84,10 +85,15 @@ public class TaiKhoanDataProvider implements Serializable {
         try {
             session.beginTransaction();
             session.saveOrUpdate(objTaiKhoan);
+            session.createSQLQuery("INSERT INTO roles_taikhoan(role_id, taikhoan_id)"
+                    + "VALUES(:roleID,:taiKhoanID)")
+                    .setInteger("roleID", ROLE_DEFAULT)
+                    .setLong("taiKhoanID", objTaiKhoan.getId())
+                    .executeUpdate();
             session.getTransaction().commit();
 	} catch (Exception e) {
             session.getTransaction().rollback();
-            log.error("Lỗi update tài khoản <<" + objTaiKhoan.getTenTaiKhoan() + ">> {}", e);
+            log.error("Lỗi update tài khoản <<" + objTaiKhoan.getTenDangNhap() + ">> {}", e);
             return false;
 	} finally {
             session.close();
@@ -100,11 +106,11 @@ public class TaiKhoanDataProvider implements Serializable {
         try {
             session.beginTransaction();
             session.delete(objTaiKhoan);
-            session.createSQLQuery("DELETE FROM quyen_taikhoan WHERE taikhoan_id = "+objTaiKhoan.getId()).executeUpdate();
+            session.createSQLQuery("DELETE FROM roles_taikhoan WHERE taikhoan_id = "+objTaiKhoan.getId()).executeUpdate();
             session.getTransaction().commit();
 	} catch (Exception e) {
             session.getTransaction().rollback();
-            log.error("Lỗi delete tài khoản <<" + objTaiKhoan.getTenTaiKhoan() + ">> {}", e);
+            log.error("Lỗi delete tài khoản <<" + objTaiKhoan.getTenDangNhap() + ">> {}", e);
             return false;
 	} finally {
             session.close();
