@@ -10,6 +10,7 @@ import npvu.util.HibernateUtil;
 import java.util.List;
 import java.io.Serializable;
 import java.util.ArrayList;
+import npvu.config.Constant;
 import org.hibernate.Session;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,8 +22,25 @@ import org.slf4j.LoggerFactory;
  * @author npvu
  */
 public class TaiKhoanDataProvider implements Serializable {  
-    private static final Logger log = LoggerFactory.getLogger(TaiKhoanDataProvider.class);
-    private static final int ROLE_DEFAULT = 100;
+    private static final Logger log = LoggerFactory.getLogger(TaiKhoanDataProvider.class);    
+    
+    public boolean checkExistTenDangNhap(String tenDangNhap){
+        Session session = HibernateUtil.currentSession();
+        boolean result = true;
+        try {
+            session.beginTransaction();
+            result = (boolean) session.createSQLQuery("SELECT EXISTS("
+                    + "SELECT * FROM taikhoan WHERE taikhoan_tendangnhap = '"+tenDangNhap+"')")
+                    .uniqueResult();
+            session.getTransaction().commit();
+	} catch (Exception e) {
+            log.error("Lỗi Kiểm tra sự tồn tại tài khoản <<" + tenDangNhap + ">> {}", e);
+            return false;
+	} finally {
+            session.close();
+	}
+        return result;
+    }
     
     public TaiKhoanModel getTaiKhoanByTenDangNhap(String tenDangNhap){
         Session session = HibernateUtil.currentSession();
@@ -47,10 +65,7 @@ public class TaiKhoanDataProvider implements Serializable {
         List<TaiKhoanModel> dsTaiKhoan = new ArrayList();
         try {
             session.beginTransaction();
-            dsTaiKhoan = session.createSQLQuery("SELECT * "
-                    + " FROM taikhoan tk"
-                    + " LEFT JOIN roles_taikhoan role"
-                    + " ON role.taikhoan_id = tk.taikhoan_id ").addEntity(TaiKhoanModel.class).list();
+            dsTaiKhoan = session.createSQLQuery("SELECT * FROM taikhoan ").addEntity(TaiKhoanModel.class).list();
             session.getTransaction().commit();
 	} catch (Exception e) {
             log.error("Lỗi get danh sách tài khoản {}", e);
@@ -79,17 +94,21 @@ public class TaiKhoanDataProvider implements Serializable {
         return dsTaiKhoan;
     }
 
-    
-    public boolean updateTaiKhoan(TaiKhoanModel objTaiKhoan){
+    /**
+     * 
+     * @param objTaiKhoan   - Đối tượng tài khoản
+     * @param updateRole    - true: cập nhật role, false: không cập nhật role
+     * @param roles         - Mảng role
+     * @return              - true: Cập nhật thành công, false: Cập nhật thất bại
+     */
+    public boolean updateTaiKhoan(TaiKhoanModel objTaiKhoan, boolean updateRole, String[] roles){
         Session session = HibernateUtil.currentSession();
         try {
             session.beginTransaction();
             session.saveOrUpdate(objTaiKhoan);
-            session.createSQLQuery("INSERT INTO roles_taikhoan(role_id, taikhoan_id)"
-                    + "VALUES(:roleID,:taiKhoanID)")
-                    .setInteger("roleID", ROLE_DEFAULT)
-                    .setLong("taiKhoanID", objTaiKhoan.getId())
-                    .executeUpdate();
+            if(updateRole){
+                updateRole(objTaiKhoan.getId(), roles, session);
+            }            
             session.getTransaction().commit();
 	} catch (Exception e) {
             session.getTransaction().rollback();
@@ -99,6 +118,24 @@ public class TaiKhoanDataProvider implements Serializable {
             session.close();
 	}
         return true;
+    }
+    
+    public void updateRole(long taiKhoanID, String[] roles, Session session){
+        if(roles.length == 0){
+            roles = new String[1];
+            roles[0] = ""+Constant.ROLE_DEFAULT;
+        }
+        session.createSQLQuery("DELETE FROM roles_taikhoan WHERE taikhoan_id = "+taiKhoanID).executeUpdate();
+        String values = "";
+        for(int i = 0; i < roles.length; i++){
+            values += "("+roles[i]+","+taiKhoanID+")";
+            if(i < roles.length - 1){
+                values += ",";
+            }
+        }
+        String query = "INSERT INTO roles_taikhoan(role_id, taikhoan_id)"
+                + " VALUES " + values;
+        session.createSQLQuery(query).executeUpdate();
     }
     
      public boolean delTaiKhoan(TaiKhoanModel objTaiKhoan){

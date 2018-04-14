@@ -83,9 +83,6 @@ a:hover {
 .content-header > h1{
     color: #565656 !important;
 }
-.btn-danger {
-    color: #ffffff !important;
-}
 
 .verify-lock .modal-body {
     height: 120px;
@@ -105,4 +102,18 @@ a:hover {
 input + label {
     margin-right: 10px !important;
     font-weight: normal !important;
+}
+.txtNote {
+    padding: 0px !important;
+}
+/* CSS FOR BUTTON #button */
+.btn-danger {
+    color: #ffffff !important;
+}
+button {
+    min-width:100px !important;
+}
+
+.alert-info {
+    background-color: yellowgreen !important; 
 }

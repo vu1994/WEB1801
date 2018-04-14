@@ -9,6 +9,7 @@ import java.io.Serializable;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 
 /**
@@ -61,6 +62,15 @@ public class ShowGrowlUtils implements Serializable{
         FacesMessage msg = new FacesMessage(ms);
         msg.setSeverity(FacesMessage.SEVERITY_ERROR);
         context.addMessage(null, msg);
+    }
+    
+    public void showMessageError(String ms, UIComponent uic){
+        System.out.println(">> showMessageError");
+        
+        FacesContext context = FacesContext.getCurrentInstance();
+        FacesMessage msg = new FacesMessage(ms);
+        msg.setSeverity(FacesMessage.SEVERITY_ERROR);
+        context.addMessage(uic.getClientId(context), msg);
     }
     
     public void showMessageFatal(String ms){

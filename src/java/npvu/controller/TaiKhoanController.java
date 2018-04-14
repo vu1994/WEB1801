@@ -7,15 +7,17 @@ package npvu.controller;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import npvu.config.Constant;
 import npvu.dataprovider.RoleDataProvider;
 import npvu.dataprovider.TaiKhoanDataProvider;
 import npvu.model.TaiKhoanModel;
 import npvu.util.DateUtils;
+import npvu.util.EncryptionUtils;
 import npvu.util.ShowGrowlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,12 @@ import org.slf4j.LoggerFactory;
 @ViewScoped
 public class TaiKhoanController implements Serializable{
     private static final Logger log = LoggerFactory.getLogger(TaiKhoanController.class);
+    
+    private UIComponent uicTenDangNhap;
+    
+    private UIComponent uicMatKhau;
+    
+    private UIComponent uicReMatKhau;
     
     private final TaiKhoanDataProvider tkProvider = new TaiKhoanDataProvider();
     
@@ -50,17 +58,18 @@ public class TaiKhoanController implements Serializable{
     private String passTemp;
     
     private String[] selectRoles;                                     // Biến dùng để lưu role khi cấp quyền
+    
     /**
      * Creates a new instance of TaiKhoanController
      */
     public TaiKhoanController() {
         actionGetDanhSachTaiKhoan();
-        viewMode = 0;
+        viewMode = 0;        
     }
     
     public void preActionTaoTaiKhoan(){
         log.info("***** Khởi tạo tham số cho tài khoản mới <preActionTaoTaiKhoan> *****");
-        objTaiKhoan = new TaiKhoanModel();        
+        resetValue();
         viewMode = 1;
     }
     
@@ -72,26 +81,58 @@ public class TaiKhoanController implements Serializable{
         log.info("***** Tạo tài khoản mới <actionUpdateTaiKhoan> *****");
         objTaiKhoan.setNgayTao(DateUtils.getCurrentDate());
         if (actionVaildFormTaoTaiKhoan()) {
-            if (tkProvider.updateTaiKhoan(objTaiKhoan)) {
+            objTaiKhoan.setMatKhau(EncryptionUtils.encryptMatKhau(objTaiKhoan.getMatKhau()));
+            if (tkProvider.updateTaiKhoan(objTaiKhoan, true, selectRoles)) {
                 showGrowl.showMessageSuccess("Cập nhật tài khoản thành công !");
             } else {
                 showGrowl.showMessageFatal("Cập nhật tài khoản thất bại, Vui lòng thử lại !");
             }
         } else {
             return;
-        }
-        passTemp = "";
+        }       
         actionGetDanhSachTaiKhoan();
         viewMode = 0;
+        log.info("NPVU TEST: "+viewMode);
     }
     
     public boolean actionVaildFormTaoTaiKhoan(){
-        boolean vaild = true;
+        boolean vaild = true;    
+        
+        /* Bắt đầu kiểm tra tên đăng nhập */
+        if(objTaiKhoan.getTenDangNhap().length() < Constant.MIN_TENDANGNHAP
+                || objTaiKhoan.getTenDangNhap().length() > Constant.MAX_TENDANGNHAP){
+            showGrowl.showMessageError("Tên đăng nhập có độ dài từ "+Constant.MIN_TENDANGNHAP+""
+                    + " đến "+Constant.MAX_TENDANGNHAP+" ký tự !", uicTenDangNhap);
+            vaild = false;
+        }
+        if(tkProvider.checkExistTenDangNhap(objTaiKhoan.getTenDangNhap())){
+            showGrowl.showMessageError("Tên đăng nhập đã tồn tại !", uicTenDangNhap);
+            vaild = false;
+        }
+        /* Kết thúc kiểm tra tên đăng nhập */
+        
+        /* Bắt đầu kiểm tra mật khẩu */
+        if(objTaiKhoan.getMatKhau().length() < Constant.MIN_MATKHAU
+                || objTaiKhoan.getMatKhau().length() > Constant.MAX_MATKHAU){
+            showGrowl.showMessageError("Tên đăng nhập có độ dài từ "+Constant.MIN_MATKHAU+""
+                    + " đến "+Constant.MAX_MATKHAU+" ký tự !", uicMatKhau);
+            vaild = false;
+        }
+        if(passTemp.length() < Constant.MIN_MATKHAU
+                || passTemp.length() > Constant.MAX_MATKHAU){
+            showGrowl.showMessageError("Tên đăng nhập có độ dài từ "+Constant.MIN_MATKHAU+""
+                    + " đến "+Constant.MAX_MATKHAU+" ký tự !", uicReMatKhau);
+            vaild = false;
+        }        
         if(!objTaiKhoan.getMatKhau().equals(passTemp)){
-            showGrowl.showMessageFatal("Mật khẩu không khớp !");
+            showGrowl.showMessageError("Mật khẩu không khớp !", uicMatKhau);
+            showGrowl.showMessageError("Mật khẩu không khớp !", uicReMatKhau);
             vaild = false;
             objTaiKhoan.setMatKhau("");
-            passTemp = "";
+            passTemp = "";            
+        }
+        /* Kết thúc kiểm tra mật khẩu */
+        if(!vaild){
             tabIndex = 0;
         }
         return vaild;
@@ -120,12 +161,21 @@ public class TaiKhoanController implements Serializable{
             objTaiKhoan.setNgayMoKhoa(DateUtils.getCurrentDate());
         }
         objTaiKhoan.setHoatdong(!objTaiKhoan.isHoatdong());        
-        tkProvider.updateTaiKhoan(objTaiKhoan);
+        tkProvider.updateTaiKhoan(objTaiKhoan, false, null);
     }
     
     public void actionDelTaiKhoan(TaiKhoanModel objTaiKhoan){
         
-        tkProvider.updateTaiKhoan(objTaiKhoan);
+        tkProvider.updateTaiKhoan(objTaiKhoan, false, null);
+    }
+    
+    public void resetValue(){
+        objTaiKhoan     = null;
+        objTaiKhoan     = new TaiKhoanModel();
+        passTemp        = null;
+        selectRoles     = null;
+        selectedRole    = 0;
+        tabIndex        = 0;
     }
     
     public void actionChangeViewMode(int mode){
@@ -195,6 +245,30 @@ public class TaiKhoanController implements Serializable{
 
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
+    }
+
+    public UIComponent getUicTenDangNhap() {
+        return uicTenDangNhap;
+    }
+
+    public void setUicTenDangNhap(UIComponent uicTenDangNhap) {
+        this.uicTenDangNhap = uicTenDangNhap;
+    }
+
+    public UIComponent getUicMatKhau() {
+        return uicMatKhau;
+    }
+
+    public void setUicMatKhau(UIComponent uicMatKhau) {
+        this.uicMatKhau = uicMatKhau;
+    }
+
+    public UIComponent getUicReMatKhau() {
+        return uicReMatKhau;
+    }
+
+    public void setUicReMatKhau(UIComponent uicReMatKhau) {
+        this.uicReMatKhau = uicReMatKhau;
     }
     
     
