@@ -5,19 +5,24 @@
  */
 package npvu.controller;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import npvu.config.Constant;
 import npvu.dataprovider.RoleDataProvider;
 import npvu.dataprovider.TaiKhoanDataProvider;
 import npvu.model.TaiKhoanModel;
 import npvu.util.DateUtils;
 import npvu.util.EncryptionUtils;
+import npvu.util.RoleUtils;
 import npvu.util.ShowGrowlUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +48,8 @@ public class TaiKhoanController implements Serializable{
     
     private final ShowGrowlUtils showGrowl = new ShowGrowlUtils();
     
+    private final RoleUtils roleUtils = new RoleUtils();
+    
     private List<TaiKhoanModel> dsTaiKhoan = new ArrayList<>();
 
     private List<Map> dsRole               = new ArrayList<>();
@@ -65,8 +72,17 @@ public class TaiKhoanController implements Serializable{
      * Creates a new instance of TaiKhoanController
      */
     public TaiKhoanController() {
-        actionGetDanhSachTaiKhoan();
-        viewMode = 0;        
+        if(roleUtils.checkRole(Constant.ROLE_ADMIN_TAIKHOAN)){
+            actionGetDanhSachTaiKhoan();
+            viewMode = 0;
+        } else {
+            try {
+                ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+                ec.redirect(ec.getRequestContextPath() + Constant.URL_ERROR_401);                
+            } catch (IOException ex) {
+                java.util.logging.Logger.getLogger(RoleUtils.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }        
     }
     
     public void preActionTaoTaiKhoan(){

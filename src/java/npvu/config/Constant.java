@@ -22,6 +22,15 @@ public class Constant {
     public static final int MAX_MATKHAU                    = 32;
     
     public static final int ROLE_DEFAULT                   = 100;
+    public static final int ROLE_GUEST                     = 100;
+    public static final int ROLE_FULL                      = 1;
+    public static final int ROLE_ADMIN_TAIKHOAN            = 2;
+    
+    public static final String URL_DANGNHAP                = "/dang-nhap/";     /* Chú ý dấu "/" ở 2 đầu */
+    
+    public static final String URL_ERROR_401               = "/error/401/";
+    public static final String URL_ERROR_403               = "/error/403/";
+    public static final String URL_ERROR_404               = "/error/404/";
     
     /* Hằng số cho xhtml (Phải có getter) */
     private final int min_tendangnhap                      = 6;

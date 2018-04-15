@@ -15,7 +15,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 import npvu.dataprovider.RoleDataProvider;
 import npvu.dataprovider.TaiKhoanDataProvider;
 import npvu.model.TaiKhoanModel;
@@ -24,7 +23,7 @@ import npvu.util.ShowGrowlUtils;
 
 /**
  *
- * @author SunnyNguyen
+ * @author npvu
  */
 @ManagedBean (name="Login")
 @SessionScoped
@@ -32,11 +31,12 @@ public class Login implements Serializable{
     
     ShowGrowlUtils showGrow = new ShowGrowlUtils();
     
-    private boolean logined;
-    private String tenDangNhap;
-    private String tenHienThi;
-    private Date thoiGian;
-    private String[] roles;
+    public static boolean logined;
+    public static long   taiKhoanID;
+    public static String tenDangNhap;
+    public static String tenHienThi;
+    public static Date thoiGian;
+    public static String[] roles;
     
     private String tempTaiKhoan;
     private String tempMatKhau;
@@ -71,6 +71,7 @@ public class Login implements Serializable{
         if(objTaiKhoan != null){
             if(objTaiKhoan.getMatKhau().equals(EncryptionUtils.encryptMatKhau(tempMatKhau))){
                 logined         = true;
+                taiKhoanID      = objTaiKhoan.getId();
                 tenDangNhap     = objTaiKhoan.getTenDangNhap();
                 tenHienThi      = objTaiKhoan.getTenHienThi();
                 thoiGian        = Calendar.getInstance().getTime();
@@ -155,6 +156,14 @@ public class Login implements Serializable{
 
     public void setTempMatKhau(String tempMatKhau) {
         this.tempMatKhau = tempMatKhau;
+    }
+
+    public long getTaiKhoanID() {
+        return taiKhoanID;
+    }
+
+    public void setTaiKhoanID(long taiKhoanID) {
+        this.taiKhoanID = taiKhoanID;
     }
 
 }

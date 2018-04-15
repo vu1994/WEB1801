@@ -37,4 +37,9 @@ and open the template in the editor.
         <pattern value="/manager/history/" />
         <view-id value="/faces/page/quanly/taikhoan/lichsudangnhap.xhtml" />
     </url-mapping>
+    
+    <url-mapping id="error401">
+        <pattern value="/error/401/" />
+        <view-id value="/faces/page/error/401.xhtml" />
+    </url-mapping>
 </pretty-config>
