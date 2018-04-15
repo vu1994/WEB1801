@@ -15,8 +15,11 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import npvu.dataprovider.RoleDataProvider;
 import npvu.dataprovider.TaiKhoanDataProvider;
 import npvu.model.TaiKhoanModel;
+import npvu.util.EncryptionUtils;
 import npvu.util.ShowGrowlUtils;
 
 /**
@@ -33,6 +36,7 @@ public class Login implements Serializable{
     private String tenDangNhap;
     private String tenHienThi;
     private Date thoiGian;
+    private String[] roles;
     
     private String tempTaiKhoan;
     private String tempMatKhau;
@@ -61,15 +65,17 @@ public class Login implements Serializable{
         
         // Lấy tài khoản từ database
         TaiKhoanDataProvider tkProvider = new TaiKhoanDataProvider();
+        RoleDataProvider roleProvider = new RoleDataProvider();
         TaiKhoanModel objTaiKhoan = tkProvider.getTaiKhoanByTenDangNhap(tempTaiKhoan);
         
         if(objTaiKhoan != null){
-            if(objTaiKhoan.getMatKhau().equals(tempMatKhau)){
-                logined = true;
-                tenDangNhap = objTaiKhoan.getTenDangNhap();
-                tenHienThi = objTaiKhoan.getTenHienThi();
-                thoiGian = Calendar.getInstance().getTime();
-                tempTaiKhoan = null;
+            if(objTaiKhoan.getMatKhau().equals(EncryptionUtils.encryptMatKhau(tempMatKhau))){
+                logined         = true;
+                tenDangNhap     = objTaiKhoan.getTenDangNhap();
+                tenHienThi      = objTaiKhoan.getTenHienThi();
+                thoiGian        = Calendar.getInstance().getTime();
+                roles           = roleProvider.getDanhSachRoleByTaiKhoan(objTaiKhoan.getId());
+                tempTaiKhoan    = null;
                 showGrow.showMessageSuccess("Đăng nhập thành công !.");
                 try {
                     ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
@@ -95,6 +101,12 @@ public class Login implements Serializable{
         tenHienThi = null;
         thoiGian = null;
         tempMatKhau = null;
+        try {            
+            ExternalContext ec = FacesContext.getCurrentInstance().getExternalContext();
+            ec.redirect(ec.getRequestContextPath() + "/");
+        } catch (IOException ex) {
+            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public boolean isLogined() {

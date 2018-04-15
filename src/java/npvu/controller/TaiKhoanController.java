@@ -51,13 +51,15 @@ public class TaiKhoanController implements Serializable{
     
     private int selectedRole;
     
-    private int viewMode;
+    private int viewMode;                                             // 0 là form danh sách, 1 là form cập nhật
     
     private int tabIndex = 0;
     
     private String passTemp;
     
     private String[] selectRoles;                                     // Biến dùng để lưu role khi cấp quyền
+    
+    private boolean editMode;                                         // True là chỉnh sửa tài khoản, False là thêm mới tài khoản
     
     /**
      * Creates a new instance of TaiKhoanController
@@ -70,6 +72,15 @@ public class TaiKhoanController implements Serializable{
     public void preActionTaoTaiKhoan(){
         log.info("***** Khởi tạo tham số cho tài khoản mới <preActionTaoTaiKhoan> *****");
         resetValue();
+        editMode = false;
+        viewMode = 1;
+    }
+    
+    public void preActionEditTaiKhoan(TaiKhoanModel tkModel){
+        objTaiKhoan = tkModel; 
+        selectRoles = roleProvider.getDanhSachRoleByTaiKhoan(objTaiKhoan.getId());
+        editMode = true;
+        tabIndex = 0;
         viewMode = 1;
     }
     
@@ -80,8 +91,10 @@ public class TaiKhoanController implements Serializable{
     public void actionUpdateTaiKhoan(){
         log.info("***** Tạo tài khoản mới <actionUpdateTaiKhoan> *****");
         objTaiKhoan.setNgayTao(DateUtils.getCurrentDate());
-        if (actionVaildFormTaoTaiKhoan()) {
-            objTaiKhoan.setMatKhau(EncryptionUtils.encryptMatKhau(objTaiKhoan.getMatKhau()));
+        if ( editMode || actionVaildFormTaoTaiKhoan()) {
+            if(!editMode){
+                objTaiKhoan.setMatKhau(EncryptionUtils.encryptMatKhau(objTaiKhoan.getMatKhau()));
+            }            
             if (tkProvider.updateTaiKhoan(objTaiKhoan, true, selectRoles)) {
                 showGrowl.showMessageSuccess("Cập nhật tài khoản thành công !");
             } else {
@@ -89,10 +102,10 @@ public class TaiKhoanController implements Serializable{
             }
         } else {
             return;
-        }       
+        }    
+        resetValue();
         actionGetDanhSachTaiKhoan();
-        viewMode = 0;
-        log.info("NPVU TEST: "+viewMode);
+        viewMode = 0;        
     }
     
     public boolean actionVaildFormTaoTaiKhoan(){
@@ -269,6 +282,14 @@ public class TaiKhoanController implements Serializable{
 
     public void setUicReMatKhau(UIComponent uicReMatKhau) {
         this.uicReMatKhau = uicReMatKhau;
+    }
+
+    public boolean isEditMode() {
+        return editMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        this.editMode = editMode;
     }
     
     

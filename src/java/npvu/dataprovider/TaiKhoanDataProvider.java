@@ -10,8 +10,10 @@ import npvu.util.HibernateUtil;
 import java.util.List;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Map;
 import npvu.config.Constant;
 import org.hibernate.Session;
+import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -92,7 +94,7 @@ public class TaiKhoanDataProvider implements Serializable {
             session.close();
 	}
         return dsTaiKhoan;
-    }
+    }        
 
     /**
      * 

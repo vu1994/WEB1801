@@ -31,9 +31,23 @@ and open the template in the editor.
                 margin-left: auto;
                 margin-top: 50px;
             }
-            .card-container.card {
-                max-width: 35%;
+            .card-container.card {  
                 padding: 40px 40px;
+            }
+            @media screen and (min-width: 700px){
+                .card-container.card {  
+                    max-width: 35% !important;
+                }
+            }
+            @media screen and (max-width: 699px){
+                .card-container.card {  
+                    max-width: 80% !important;
+                }
+            }
+            @media screen and (max-width: 400px){
+                .card-container.card {  
+                    max-width: 90% !important;
+                }
             }
             .card {
                 /* background-color: #F7F7F7; */

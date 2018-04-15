@@ -41,4 +41,31 @@ public class RoleDataProvider implements Serializable {
         return dsRole;
     }
     
+    public String[] getDanhSachRoleByTaiKhoan(long taiKhoanID){
+        Session session = HibernateUtil.currentSession();
+        List<Map> dsRole;
+        String[] arrResult = null;
+        try {
+            session.beginTransaction();
+            dsRole = session.createSQLQuery("SELECT role.*"
+                    + " FROM roles_taikhoan rtk"
+                    + " LEFT JOIN roles role"
+                    + " ON role.role_id = rtk.role_id "
+                    + " WHERE rtk.taikhoan_id = "+taiKhoanID)
+                    .setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP)
+                    .list();
+            session.getTransaction().commit();
+            arrResult = new String[dsRole.size()];
+            int i = 0;
+            for(Map role : dsRole){
+                arrResult[i] = role.get("role_id").toString();
+                i++;
+            }
+	} catch (Exception e) {
+            log.error("Lỗi get danh sách quyền theo tài khoản id: <<" + taiKhoanID + ">> {}", e);
+	} finally {
+            session.close();
+	}
+        return arrResult;
+    }
 }
