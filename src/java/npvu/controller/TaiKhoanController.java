@@ -68,6 +68,12 @@ public class TaiKhoanController implements Serializable{
     
     private boolean editMode;                                         // True là chỉnh sửa tài khoản, False là thêm mới tài khoản
     
+    private String tenDangNhapFilter;
+    
+    private String tenHienThiFilter;
+    
+    private String emailFilter;
+    
     /**
      * Creates a new instance of TaiKhoanController
      */
@@ -167,10 +173,16 @@ public class TaiKhoanController implements Serializable{
         return vaild;
     }
     
-    private void actionGetDanhSachTaiKhoan(){
+    public void actionGetDanhSachTaiKhoan(){
         log.info("***** Lấy danh sách tài khoản <actionGetDanhSachTaiKhoan> *****");
         dsTaiKhoan.clear();
-        dsTaiKhoan = tkProvider.getDanhSachTaiKhoan();
+        dsTaiKhoan = tkProvider.getDanhSachTaiKhoan(null, null, null);
+    }
+    
+    public void actionGetDanhSachTaiKhoanFilter(){
+        log.info("***** Lấy danh sách tài khoản <actionGetDanhSachTaiKhoanFilter> *****" +tenDangNhapFilter);
+        dsTaiKhoan.clear();
+        dsTaiKhoan = tkProvider.getDanhSachTaiKhoan(tenDangNhapFilter, tenHienThiFilter, emailFilter);
     }
     
     public void actionGetDanhSachTaiKhoanByRole(){
@@ -306,6 +318,30 @@ public class TaiKhoanController implements Serializable{
 
     public void setEditMode(boolean editMode) {
         this.editMode = editMode;
+    }
+
+    public String getTenDangNhapFilter() {
+        return tenDangNhapFilter;
+    }
+
+    public void setTenDangNhapFilter(String tenDangNhapFilter) {
+        this.tenDangNhapFilter = tenDangNhapFilter;
+    }
+
+    public String getTenHienThiFilter() {
+        return tenHienThiFilter;
+    }
+
+    public void setTenHienThiFilter(String tenHienThiFilter) {
+        this.tenHienThiFilter = tenHienThiFilter;
+    }
+
+    public String getEmailFilter() {
+        return emailFilter;
+    }
+
+    public void setEmailFilter(String emailFilter) {
+        this.emailFilter = emailFilter;
     }
     
     

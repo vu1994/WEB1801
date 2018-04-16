@@ -10,10 +10,8 @@ import npvu.util.HibernateUtil;
 import java.util.List;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Map;
 import npvu.config.Constant;
 import org.hibernate.Session;
-import org.hibernate.transform.Transformers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -62,12 +60,22 @@ public class TaiKhoanDataProvider implements Serializable {
         return objTaiKhoanModel;
     }
     
-    public List<TaiKhoanModel> getDanhSachTaiKhoan(){
+    public List<TaiKhoanModel> getDanhSachTaiKhoan(String tenDangNhapFilter, String tenHienThiFilter, String emailFilter){
         Session session = HibernateUtil.currentSession();
         List<TaiKhoanModel> dsTaiKhoan = new ArrayList();
+        String where = "";
+        if(tenDangNhapFilter != null){
+            where += " AND taikhoan_tendangnhap like '%"+tenDangNhapFilter+"%' ";
+        }
+        if(tenHienThiFilter != null){
+            where += " AND taikhoan_tenhienthi like '%"+tenHienThiFilter+"%' ";
+        }
+        if(emailFilter != null){
+            where += " AND taikhoan_email like '%"+emailFilter+"%' ";
+        }
         try {
             session.beginTransaction();
-            dsTaiKhoan = session.createSQLQuery("SELECT * FROM taikhoan ").addEntity(TaiKhoanModel.class).list();
+            dsTaiKhoan = session.createSQLQuery("SELECT * FROM taikhoan WHERE 1 = 1 "+where).addEntity(TaiKhoanModel.class).list();
             session.getTransaction().commit();
 	} catch (Exception e) {
             log.error("Lỗi get danh sách tài khoản {}", e);
